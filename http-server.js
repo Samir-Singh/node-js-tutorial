@@ -10,7 +10,7 @@ const myServer = http.createServer((req, res) => {
   };
 
   fs.writeFileSync(
-    "./request.txt",
+    "./http-server.txt",
     JSON.stringify(requestData, null, 2) + "\n\n",
     (err) => {
       if (err) {
@@ -19,7 +19,7 @@ const myServer = http.createServer((req, res) => {
     },
   );
 
-  res.end("Hello from server");
+  res.end("Hello from http-server");
 });
 
-myServer.listen(8000, () => console.log("server started"));
+myServer.listen(8000, () => console.log("http-server server started"));
