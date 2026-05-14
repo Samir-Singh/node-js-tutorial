@@ -5,7 +5,7 @@ import fs from "fs";
 
 const app = express();
 
-// app.use is like a middleware
+// app.use is like a middleware which will run before every request or response
 app.use((req, res, next) => {
   if (req.url === "/favicon.ico") {
     res.end();
