@@ -15,4 +15,4 @@ express = ^4.18.2
 
 No symbol (4.18.2): now our version is locked you cannot upgrade your version using npm install or update you have to manually update the new version.
 Caret symbol (^4.18.2): if there will be new version available and when you npm update than it will not update the (MAJOR) it will only change the (MINOR) or (PATCH).
-Tilde symbol (~4.18.2): only (PATCH) version will be update (MAJOR) and (MINOR) both will not upgrade or change
+Tilde symbol (~4.18.2): only (PATCH) version will be update (MAJOR) and (MINOR) both will not upgrade or change.

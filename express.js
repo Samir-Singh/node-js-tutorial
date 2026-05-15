@@ -5,11 +5,10 @@ import fs from "fs";
 
 const app = express();
 
-// app.use is like a middleware which will run before every request or response
+// app.use is like a middleware which runs after every request and before every response. So middleware sits in between request and response.
 app.use((req, res, next) => {
   if (req.url === "/favicon.ico") {
-    res.end();
-    return;
+    return res.end();
   }
 
   fs.appendFileSync("./express.txt", `${Date.now()}: ${req.url}` + "\n");
