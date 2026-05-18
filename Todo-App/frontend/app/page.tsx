@@ -6,6 +6,7 @@ const URL = "http://localhost:8000";
 
 export default function Home() {
   const [todo, setTodo] = useState("");
+  const [todoId, setTodoId] = useState<number | null>(null);
   const [todos, setTodos] = useState<{ id: number; name: string }[]>([]);
 
   const getTodos = async () => {
@@ -15,6 +16,7 @@ export default function Home() {
       if (res.status === 200) {
         setTodos(res.data);
         setTodo("");
+        setTodoId(null);
       }
     } catch (error) {
       console.log(error);
@@ -25,6 +27,17 @@ export default function Home() {
   const createTodo = async () => {
     try {
       await axios.post(`${URL}/todo`, { name: todo });
+      getTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editTodo = async () => {
+    try {
+      await axios.patch(`${URL}/todo/${todoId}`, {
+        name: todo,
+      });
       getTodos();
     } catch (error) {
       console.log(error);
@@ -51,7 +64,11 @@ export default function Home() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            createTodo();
+            if (todoId) {
+              editTodo();
+            } else {
+              createTodo();
+            }
           }}
           className="flex items-center gap-3 mt-5"
         >
@@ -62,24 +79,35 @@ export default function Home() {
             className="border rounded outline-none px-1"
           />
           <button className="bg-gray-500 px-3 rounded text-white cursor-pointer">
-            Submit
+            {todoId ? "Update" : "Submit"}
           </button>
         </form>
 
         <div className="w-full mt-5">
-          {todos?.map((item) => (
+          {todos?.map((item, idx) => (
             <p
-              className="text-start w-full flex justify-between items-center"
+              className={`text-start w-full flex justify-between items-center ${idx > 0 ? "mt-2" : ""}`}
               key={item?.id}
             >
-              <span>{item?.name}</span>
+              <span>
+                {idx + 1}: {item?.name}
+              </span>
 
               <span className="inline-flex gap-2">
-                <button className="bg-gray-400 p-1 flex items-center justify-center rounded cursor-pointer">
+                <button
+                  onClick={() => {
+                    setTodo(item?.name);
+                    setTodoId(item?.id);
+                  }}
+                  className="bg-gray-400 p-1 flex items-center justify-center rounded cursor-pointer"
+                >
                   ✏️
                 </button>
                 <button
-                  onClick={() => deleteTodo(item?.id)}
+                  onClick={() => {
+                    deleteTodo(item?.id);
+                    setTodo("");
+                  }}
                   className="bg-gray-400 p-1 flex items-center justify-center rounded cursor-pointer"
                 >
                   ❌
