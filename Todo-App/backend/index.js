@@ -34,6 +34,30 @@ app.post("/todo", (req, res) => {
   });
 });
 
+app.patch("/todo/:id", (req, res) => {
+  const body = req.body;
+  const id = Number(req.params.id);
+
+  todos = todos?.map((item) => {
+    if (item?.id === id) {
+      return {
+        ...item,
+        name: body.name,
+      };
+    }
+
+    return item;
+  });
+
+  fs.writeFile("./todo.json", JSON.stringify(todos), (err, data) => {
+    if (err) {
+      return res.status(500).json({ status: "error" });
+    }
+
+    return res.json({ status: "success", id: Number(id) });
+  });
+});
+
 app.delete("/todo/:id", (req, res) => {
   const id = req.params.id;
   todos = todos?.filter((item) => item?.id != id);
