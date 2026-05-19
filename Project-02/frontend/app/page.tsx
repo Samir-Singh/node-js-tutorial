@@ -14,30 +14,47 @@ export default function Home() {
   });
 
   const getUserList = async () => {
-    const res = await axios.get("http://localhost:8000/users");
-    setUserList(res.data);
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      gender: "",
-    });
+    try {
+      const res = await axios.get("http://localhost:8000/users");
+      setUserList(res?.data?.data);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        gender: "",
+      });
+    } catch (err) {
+      console.log(err);
+      setUserList([]);
+    }
   };
 
   const createUser = async () => {
-    await axios.post("http://localhost:8000/user", formData);
-    getUserList();
+    try {
+      await axios.post("http://localhost:8000/user", formData);
+      getUserList();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const editUser = async () => {
-    await axios.patch(`http://localhost:8000/user/${selectedUser}`, formData);
-    getUserList();
-    setSelectedUser(null);
+    try {
+      await axios.patch(`http://localhost:8000/user/${selectedUser}`, formData);
+      getUserList();
+      setSelectedUser(null);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const deleteUser = async (id: string) => {
-    await axios.delete(`http://localhost:8000/user/${id}`);
-    getUserList();
+    try {
+      await axios.delete(`http://localhost:8000/user/${id}`);
+      getUserList();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

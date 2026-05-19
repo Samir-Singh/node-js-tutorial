@@ -12,7 +12,7 @@ app.use(
 
 app.use(express.json());
 
-// Connection to MongoDB
+// Connection to MongoDB database .. here we are connecting to the local database and creating a new database named crud-app
 mongoose
   .connect("mongodb://127.0.0.1:27017/crud-app")
   .then(() => console.log("MongoDB Connected"))
@@ -40,12 +40,12 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Creating the model for our database
+// Creating the model for our database .. here we have written the User which will converted into users collection in the database
 const User = mongoose.model("User", UserSchema);
 
 // Getting the users list from the database
 app.get("/users", async (req, res) => {
-  return res.json(await User.find());
+  return res.json({ status: "success", data: await User.find() });
 });
 
 // Creating a new user in the database
