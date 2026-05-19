@@ -16,6 +16,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// there are some built-in middleware in express like express.json() which is used to parse json data from request body and express.static() which is used to serve static files like html, css, js, images etc. we can also create our own custom middleware like above two middleware.
+// Best Practice: Always use the built-in middleware when possible as they are well-tested and maintained by the Express team.
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files
+app.use(express.static("public"));
+
 app.get("/", (req, res) => {
   return res.send("<h1>Middleware</h1>");
 });
