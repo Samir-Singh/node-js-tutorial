@@ -1,89 +1,24 @@
 import cors from "cors";
 import express from "express";
-import mongoose from "mongoose";
+import connectDB from "./config/db.js";
+import userRouter from "./routes/user.js";
 
 const app = express();
 
+// middleware to allow cross-origin requests from the frontend application running on http://localhost:3000
 app.use(
   cors({
     origin: "http://localhost:3000",
   }),
 );
 
+// middleware to parse the incoming JSON data in the request body and make it available in req.body
 app.use(express.json());
 
 // Connection to MongoDB database .. here we are connecting to the local database and creating a new database named crud-app
-mongoose
-  .connect("mongodb://127.0.0.1:27017/crud-app")
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log("MongoDB Connection Error: ", err));
+connectDB("mongodb://127.0.0.1:27017/crud-app");
 
-// Creating the schema for our database
-const UserSchema = new mongoose.Schema(
-  {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    gender: {
-      type: String,
-    },
-  },
-  { timestamps: true },
-);
-
-// Creating the model for our database .. here we have written the User which will converted into users collection in the database
-const User = mongoose.model("User", UserSchema);
-
-// Getting the users list from the database
-app.get("/users", async (req, res) => {
-  return res.json({ status: "success", data: await User.find() });
-});
-
-// Creating a new user in the database
-app.post("/user", async (req, res) => {
-  const body = req.body;
-
-  if (
-    !body ||
-    !body.firstName ||
-    !body.lastName ||
-    !body.email ||
-    !body.gender
-  ) {
-    return res
-      .status(400)
-      .json({ status: "error", message: "All fields are required" });
-  }
-
-  const result = await User.create({
-    firstName: body.firstName,
-    lastName: body.lastName,
-    email: body.email,
-    gender: body.gender,
-  });
-
-  return res.status(201).json({ status: "success", data: result });
-});
-
-// Updating a user in the database
-app.patch("/user/:id", async (req, res) => {
-  await User.findByIdAndUpdate(req.params.id, req.body);
-  return res.json({ status: "success", message: "User updated successfully" });
-});
-
-// Deleting a user from the database
-app.delete("/user/:id", async (req, res) => {
-  await User.findByIdAndDelete(req.params.id);
-  return res.json({ status: "success", message: "User deleted successfully" });
-});
+// routes
+app.use("/api", userRouter);
 
 app.listen(8000, () => console.log("Server is running on port 8000"));

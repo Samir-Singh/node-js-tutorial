@@ -15,7 +15,7 @@ export default function Home() {
 
   const getUserList = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/users");
+      const res = await axios.get("http://localhost:8000/api/users");
       setUserList(res?.data?.data);
       setFormData({
         firstName: "",
@@ -31,7 +31,7 @@ export default function Home() {
 
   const createUser = async () => {
     try {
-      await axios.post("http://localhost:8000/user", formData);
+      await axios.post("http://localhost:8000/api/user", formData);
       getUserList();
     } catch (err) {
       console.log(err);
@@ -40,7 +40,10 @@ export default function Home() {
 
   const editUser = async () => {
     try {
-      await axios.patch(`http://localhost:8000/user/${selectedUser}`, formData);
+      await axios.patch(
+        `http://localhost:8000/api/user/${selectedUser}`,
+        formData,
+      );
       getUserList();
       setSelectedUser(null);
     } catch (err) {
@@ -50,7 +53,7 @@ export default function Home() {
 
   const deleteUser = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:8000/user/${id}`);
+      await axios.delete(`http://localhost:8000/api/user/${id}`);
       getUserList();
     } catch (err) {
       console.log(err);
