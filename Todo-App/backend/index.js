@@ -4,6 +4,7 @@ import fs from "fs";
 
 const app = express();
 
+//  here why we did not write import todo from "./todo.json" because import load the JSON once but this below line of code read the file every time whenever data changes.
 let todos = JSON.parse(fs.readFileSync("./todo.json", "utf-8"));
 
 app.use(
